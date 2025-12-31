@@ -34,7 +34,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE phosphor)
 
 ## api documentation
 to use the api:
-* all functions are contained in the `log` namespace
+* all functions are contained in the `phosphor::log` namespace
 * format specifiers: `{:type}` (like fmt)
 
 ### available functions
@@ -49,8 +49,8 @@ to use the api:
 
 int main(void) {
     int someVal = 0;
-    if (someVal != 0) log::warn("someVal is not 0!");
-    else log::debug("someVal is {:d}", someVal);
+    if (someVal != 0) phosphor::log::warn("someVal is not 0!");
+    else phosphor::log::debug("someVal is {:d}", someVal);
 
     return 0;
 }
@@ -58,7 +58,7 @@ int main(void) {
 
 but if you're REALLY paranoid, you can use the internal functions:
 ```c++
-log::logarithm::logFmt(<logLevel>, <message>);
+log::core::logFmt(<logLevel>, <message>);
 ```
 * replace `<logLevel>` with your log level of choice
 * replace `<message>` with your message of choice

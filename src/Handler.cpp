@@ -1,11 +1,11 @@
 #pragma once
 #include "Handler.hpp"
 
-namespace log {
+namespace phosphor::log {
 
-void logarithm::logInt(int val) {
+void core::logInt(int val) {
     if (val < 0) val = -val;
-    long long div = 1000000000LL;
+    std::int64_t div = 1'000'000'000;
     bool started = false;
 
     for (int i = 0; i < 10; ++i) {
@@ -20,7 +20,7 @@ void logarithm::logInt(int val) {
     }
 }
 
-void logarithm::logHex(uintptr_t val) {
+void core::logHex(uintptr_t val) {
     std::fputs("0x", stdout);
     bool started = false;
 
@@ -34,11 +34,11 @@ void logarithm::logHex(uintptr_t val) {
     }
 }
 
-void logarithm::logCstr(const char* str) {
+void core::logCstr(const char* str) {
     while (*str) {
         std::fputc(*str, stdout);
         ++str;
     }
 }
 
-} // namespace log
+} // namespace phosphor::log

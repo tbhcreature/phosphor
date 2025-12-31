@@ -1,6 +1,6 @@
 #include "Handler.hpp"
 
-namespace log {
+namespace phosphor::log {
 
 inline logarithm logger;
 
@@ -24,4 +24,4 @@ inline void debug(const char* fmt, Args... args) {
     logger.logFmt(LOG_LEVEL::DEBUG, fmt, args...);
 }
 
-} // namespace log
+} // namespace phosphor::log

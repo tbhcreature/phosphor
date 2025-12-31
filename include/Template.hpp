@@ -1,10 +1,10 @@
 #pragma once
 #include "Handler.hpp"
 
-namespace log {
+namespace phosphor::log {
 
 template<typename T, typename... Args>
-void logarithm::formatImpl(const char* fmt, T val, Args... args) {
+void core::formatImpl(const char* fmt, T val, Args... args) {
     while (*fmt) {
         if (fmt[0] == '{' && fmt[1] == ':' && fmt[3] == '}') {
             char spec = fmt[2];
@@ -19,12 +19,12 @@ void logarithm::formatImpl(const char* fmt, T val, Args... args) {
 }
 
 template<typename... Args>
-void logarithm::logFmt(LOG_LEVEL level, const char* fmt, Args... args) {
+void core::logFmt(LOG_LEVEL level, const char* fmt, Args... args) {
     if (level > logLevel) return;
 
-    printf("[%s]: ", toString(level));
+    printf("[%s, %s]: ", getTime(), toString(level));
     formatImpl(fmt, args...);
     std::fputc('\n', stdout);
 }
 
-} // namespace log
+} // namespace phosphor::log

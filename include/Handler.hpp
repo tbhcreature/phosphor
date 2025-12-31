@@ -1,9 +1,11 @@
 #pragma once
 #include <cstdio>
+#include <chrono>
 #include <cstdint>
+#include <ctime>
 #include <type_traits>
 
-namespace log {
+namespace phosphor::log {
 
 enum class LOG_LEVEL {
     INFO = 0,
@@ -25,7 +27,32 @@ inline const char* toString(LOG_LEVEL level) {
     }
 }
 
-class logarithm {
+inline const char* getTime() {
+    static thread_local char buf[16];
+    auto now = std::chrono::system_clock::now();
+    std::time_t time = std::chrono::system_clock::to_time_t(now);
+    std::tm tm = {};
+
+#if defined(_WIN32)
+    localtime_s(&tm, &time);
+#elif defined(__linux__)
+    localtime_r(&time, &tm);
+#else
+    #error i dont know how to get the time on this platform!
+#endif
+
+    std::snprintf(
+        buf,
+        sizeof(buf),
+        "%02d:%02d:%02d",
+        tm.tm_hour,
+        tm.tm_min,
+        tm.tm_sec
+    );
+    return buf;
+}
+
+class core {
 public:
     static void logInt(int val);
     static void logHex(uintptr_t val);
@@ -48,27 +75,35 @@ public:
 namespace detail {
 
 inline void dispatchLog(char spec, int val) {
-    if (spec == 'd') logarithm::logInt(val);
-    else std::fputc('?', stdout);
+    switch (spec) {
+        case 'd': core::logInt(val); break;
+        default: std::fputc('?', stdout); break;
+    }
 }
 
 inline void dispatchLog(char spec, const char* val) {
-    if (spec == 's') logarithm::logCstr(val);
-    else if (spec == 'p')
-        logarithm::logHex(reinterpret_cast<uintptr_t>(val));
-    else std::fputc('?', stdout);
-
+    switch (spec) {
+        case 's': core::logCstr(val); break;
+        case 'p':
+            core::logHex(reinterpret_cast<uintptr_t>(val));
+            break;
+        default: std::fputc('?', stdout); break;
+    }
 }
 
 template<typename T>
 void dispatchLog(char spec, T* val) {
-    if (spec == 'p' || spec == 'x')
-        logarithm::logHex(reinterpret_cast<uintptr_t>(val));
-    else std::fputc('?', stdout);
+    switch (spec) {
+        case 'p':
+        case 'x':
+            core::logHex(reinterpret_cast<uintptr_t>(val));
+            break;
+        default: std::fputc('?', stdout); break;
+    }
 }
 
 } // namespace detail   
 
-} // namespace log
+} // namespace phosphor::log
 
 #include "Template.hpp"
