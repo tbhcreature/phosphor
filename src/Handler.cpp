@@ -25,10 +25,9 @@ void core::logHex(uintptr_t val) {
     bool started = false;
 
     for (int shift = (sizeof(uintptr_t)*8) - 4; shift >= 0; shift -= 4) {
-        int nibble = (val >> shift) & 0xF;
+        int nibble = static_cast<int>((val >> shift) & 0xF);
         if (nibble != 0 || started || shift == 0) {
-            char ch = (nibble < 10) ? ('0' + nibble) : ('a' + (nibble - 10));
-            std::fputc(ch, stdout);
+            std::fputc((nibble < 10) ? '0' + nibble : 'a' + nibble - 10, stdout);
             started = true;
         }
     }

@@ -1,7 +1,7 @@
 @echo off
 setlocal
-vcvarsall x64
+call vcvarsall x64
 cmake .
 cmake --build .
-finalize
+.\scripts\finalize.bat
 endlocal

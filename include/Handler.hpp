@@ -4,6 +4,8 @@
 #include <cstdint>
 #include <ctime>
 #include <type_traits>
+#include <format>
+#include <string>
 
 namespace phosphor::log {
 
@@ -27,7 +29,7 @@ inline const char* toString(LOG_LEVEL level) {
     }
 }
 
-inline const char* getTime() {
+inline const std::string& getTime() {
     static thread_local char buf[16];
     auto now = std::chrono::system_clock::now();
     std::time_t time = std::chrono::system_clock::to_time_t(now);
@@ -41,15 +43,12 @@ inline const char* getTime() {
     #error i dont know how to get the time on this platform!
 #endif
 
-    std::snprintf(
-        buf,
-        sizeof(buf),
-        "%02d:%02d:%02d",
+    return std::format(
+        "{:02}:{:02}:{:02}",
         tm.tm_hour,
         tm.tm_min,
         tm.tm_sec
     );
-    return buf;
 }
 
 class core {
