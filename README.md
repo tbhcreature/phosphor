@@ -58,7 +58,7 @@ int main(void) {
 
 but if you're REALLY paranoid, you can use the internal functions:
 ```c++
-log::core::logFmt(<logLevel>, <message>);
+phosphor::log::core::logFmt(<logLevel>, <message>);
 ```
 * replace `<logLevel>` with your log level of choice
 * replace `<message>` with your message of choice
