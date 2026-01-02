@@ -64,8 +64,8 @@ public:
             std::fputc(*fmt++, stderr);
     }
 
-    template<typename T, typename... Args>
-    void formatImpl(const char* fmt, T val, Args... args);
+    template<typename... Args>
+    void formatImpl(const char* fmt, Args&&... args);
     template<typename... Args>
     void logFmt(LOG_LEVEL level, const char* fmt, Args... args);
 };
@@ -100,37 +100,11 @@ void dispatchLog(char spec, T* val) {
     }
 }
 
-constexpr std::size_t ctGetSpecs(const char* spec) {
-    std::size_t n = 0;
-    for (std::size_t i = 0; spec[i]; ++i) {
-        if (
-            spec[i] == '{' &&
-            spec[i+1] == ':' &&
-            spec[i+2] &&
-            spec[i+3] == '}'
-        ) {
-            ++n;
-            i += 3;
-        }
-    }
-    return n;
-}
+template <size_t I, typename Tuple>
+void dispatchTupleImpl(const Tuple& tuple, size_t index, char spec, bool& dispatched);
 
-inline std::size_t rtGetSpecs(const char* spec) {
-    std::size_t n = 0;
-    for (; *spec; ++spec) {
-        if (
-            spec[0] == '{' &&
-            spec[1] == ':' &&
-            spec[2] &&
-            spec[3] == '}'
-        ) {
-            ++n;
-            spec += 3;
-        }
-    }
-    return n;
-}
+template <typename Tuple>
+void dispatchTuple(const Tuple& tuple, size_t index, char spec);
 
 } // namespace detail   
 
