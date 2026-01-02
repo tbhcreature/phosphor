@@ -52,7 +52,7 @@ void core::logFmt(LOG_LEVEL level, const char* fmt, Args... args) {
 
     std::fprintf(
         stderr,
-        "[%s, %s]: ",
+        "[%s %s]: ",
         getTime(),
         toString(level)
     );
